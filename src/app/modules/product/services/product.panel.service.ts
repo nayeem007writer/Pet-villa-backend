@@ -66,6 +66,9 @@ export class PanelProductService extends BaseService<Product> {
       docPayload.push(jobImageObj);
     }
 
+
+    const user = await this.userService.findByIdBase(authUser.id as string);
+    console.log
     
 
     const newProductObj = {
@@ -73,7 +76,8 @@ export class PanelProductService extends BaseService<Product> {
       description: data.description,  
       PetSpecies: data.species,
       breed: data.breed,
-      age:
+      user,
+      age: 
       data.age,
       productImages: docPayload.find(doc => doc.title === 'image')?.url || null,
     }

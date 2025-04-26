@@ -32,31 +32,14 @@ export class FilterProductDTO {
   @IsString()
   readonly searchTerm!: string;
 
-  @ApiProperty({
-    type: String,
-    description: 'department uuid',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  readonly departmentId!: string;
+  // @ApiProperty({
+  //   type: String,
+  //   description: 'userID',
+  //   required: false,
+  // })
+  // @IsOptional()
+  // @IsString()
+  // readonly userId!: string;
 
-  @ApiProperty({
-    type: String,
-    description: 'category uuid',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  readonly categoryId!: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'brand uuid',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  readonly brandId!: string;
 
 }

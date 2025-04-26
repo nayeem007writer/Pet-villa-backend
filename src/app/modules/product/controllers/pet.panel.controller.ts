@@ -24,7 +24,7 @@ import { AuthUser } from '@src/app/decorators';
 
 @ApiTags('Panel Pet')
 @ApiBearerAuth()
-@Controller('panel/pets')
+@Controller('pets')
 export class PanelProductController {
   RELATIONS = [];
   constructor(private readonly service: PanelProductService) { }

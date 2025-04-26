@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Role } from '../../acl/entities/role.entity';
 import { UserRole } from './userRole.entity';
+import { Product } from '../../product/entities/product.entity';
 
 @Entity(ENUM_TABLE_NAMES.USERS)
 export class User extends BaseEntity {
@@ -52,6 +53,9 @@ export class User extends BaseEntity {
   @OneToMany((t) => UserRole, (e) => e.user)
   @Type((t) => UserRole)
   userRoles?: UserRole[];
+
+  @OneToMany((t) => Product, (e) => e.user)
+  products?: Product[];
 
   roles?: Role[] = [];
 
