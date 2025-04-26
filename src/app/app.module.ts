@@ -13,6 +13,7 @@ import { UserModule } from './modules/user/user.module';
 import { ProductModule } from './modules/product/product.module';
 import { AuthMiddleware } from './middlewares';
 import { ENV } from '@src/env';
+import { ProfileModule } from './modules/profile/profile.module';
 
 const MODULES = [
   CacheModule.register({
@@ -25,7 +26,8 @@ const MODULES = [
   }),
   AuthModule,
   UserModule,
-  ProductModule
+  ProductModule,
+  ProfileModule
 ];
 @Module({
   imports: [...MODULES],

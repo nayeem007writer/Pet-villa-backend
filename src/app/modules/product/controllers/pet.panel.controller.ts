@@ -29,14 +29,22 @@ export class PanelProductController {
   RELATIONS = [];
   constructor(private readonly service: PanelProductService) { }
 
+  // user can see only his own products
+  // admin can see all products
   @Get()
   async findAll(
     @Query() query: FilterProductDTO,
     @AuthUser() AuthUser,
   ): Promise<SuccessResponse | Product[]> {
+    const user = this.service.findUser(AuthUser.id);
     return this.service.findAllBaseById(AuthUser.id,query, { relations: this.RELATIONS });
   }
 
+  @Get('customer')
+  async findAllForCustomer(
+    @Query() query: FilterProductDTO,):Promise<SuccessResponse | Product[]>  {
+    return this.service.findAllBase(query, { relations: this.RELATIONS });
+    }
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Product> {
     return this.service.findByIdBase(id, { relations: this.RELATIONS });
