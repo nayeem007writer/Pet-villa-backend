@@ -147,6 +147,110 @@ export abstract class BaseService<T extends BaseEntity>
     }
   }
 
+  async findAllBaseById(
+    userId: any,
+    filters: {
+      searchTerm?: string;
+      limit?: number;
+      page?: number;
+      [key: string]: any;
+    },
+    options?: IFindAllBaseOptions
+  ): Promise<SuccessResponse | T[]> {
+    const { searchTerm, limit: take, page, ...queryOptions } = filters;
+    const skip = (page - 1) * take;
+  
+    // Always filter by user ID
+    queryOptions.user = userId;
+  
+    if (
+      searchTerm &&
+      this.repo.target.valueOf().hasOwnProperty('SEARCH_TERMS')
+    ) {
+      let SEARCH_TERMS = (this.repo.target.valueOf() as any).SEARCH_TERMS || [];
+  
+      if (Object.keys(queryOptions).length) {
+        SEARCH_TERMS = SEARCH_TERMS.filter(
+          (term) => !term.includes(Object.keys(queryOptions))
+        );
+      }
+  
+      const relations = this.repo.metadata.relations.map((r) => r.propertyName);
+  
+      Object.keys(queryOptions).forEach((key) => {
+        if (relations.includes(key) && isUUID(queryOptions[key])) {
+          queryOptions[key] = {
+            id: queryOptions[key],
+          };
+        }
+      });
+  
+      const where = [];
+  
+      for (const term of SEARCH_TERMS) {
+        where.push({
+          ...queryOptions,
+          [term]: ILike(`%${searchTerm}%`),
+        });
+      }
+  
+      const result = await this.repo.findAndCount({
+        where,
+        skip,
+        take,
+        relations: options?.relations || [],
+      });
+  
+      return new SuccessResponse(
+        `${this.repo.metadata.name} fetched successfully`,
+        result,
+        {
+          total: result[1],
+          page: toNumber(page),
+          limit: toNumber(take),
+          skip,
+        }
+      );
+    } else {
+      const relations = this.repo.metadata.relations.map((r) => r.propertyName);
+  
+      Object.keys(queryOptions).forEach((key) => {
+        if (relations.includes(key) && isUUID(queryOptions[key])) {
+          queryOptions[key] = {
+            id: queryOptions[key],
+          };
+        }
+      });
+  
+      const opts: FindManyOptions = {
+        where: queryOptions as FindOptionsWhere<T>,
+      };
+  
+      if (skip && !isNaN(skip)) opts.skip = skip;
+      if (take && !isNaN(take)) opts.take = take;
+      if (options?.relations && Array.isArray(options.relations)) {
+        opts.relations = options?.relations || [];
+      }
+  
+      if (options?.withoutPaginate) {
+        return await this.repo.find(opts);
+      } else {
+        const result = await this.repo.findAndCount(opts);
+  
+        return new SuccessResponse(
+          `${this.repo.metadata.name} fetched successfully`,
+          result[0],
+          {
+            total: result[1],
+            page: toNumber(page),
+            limit: toNumber(take),
+            skip,
+          }
+        );
+      }
+    }
+  }
+
   async findByIdBase(id: string, options?: IFindByIdBaseOptions): Promise<T> {
     return await this.repo.findOne({
       where: {

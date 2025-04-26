@@ -31,9 +31,10 @@ export class PanelProductController {
 
   @Get()
   async findAll(
-    @Query() query: FilterProductDTO
+    @Query() query: FilterProductDTO,
+    @AuthUser() AuthUser,
   ): Promise<SuccessResponse | Product[]> {
-    return this.service.findAllBase(query, { relations: this.RELATIONS });
+    return this.service.findAllBaseById(AuthUser.id,query, { relations: this.RELATIONS });
   }
 
   @Get(':id')

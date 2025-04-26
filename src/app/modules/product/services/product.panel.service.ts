@@ -11,6 +11,7 @@ import {  imgBBServerFileUploader, r2ServerFileUploader } from "@src/util/server
 import { SuccessResponse } from "@src/app/types";
 import { UserRoleService } from "../../user/services/userRole.service";
 import { UserService } from "../../user/services/user.service";
+import { User } from "../../user/entities/user.entity";
 
 @Injectable()
 export class PanelProductService extends BaseService<Product> {
@@ -40,7 +41,11 @@ export class PanelProductService extends BaseService<Product> {
     }
   }
 
-
+async findUser(
+    id: any ) : Promise<User> {
+      const user = await this.userService.findByIdBase(id as string);
+   return user;  
+  }
 
   async createProductsWithImageWithSpecialProduct(
     data: CreateProductDTO,
