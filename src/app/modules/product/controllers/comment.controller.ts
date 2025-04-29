@@ -42,7 +42,14 @@ export class CommentController {
     return this.service.findByIdBase(id);
   }
 
-
+  @Get(":id/productId")
+  async findAllByProductId(
+    @AuthUser() AuthUser,
+    @Param('id') id: string,
+    @Query() query: FilterCommentDTO
+  ): Promise<SuccessResponse | Comment[]> {
+    return this.service.findAllBaseByProductId(id, query, { relations: this.RELATIONS });
+  }
 
 
   @Post(':id') 
