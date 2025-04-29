@@ -43,7 +43,7 @@ export class CommentService extends BaseService<Comment> {
       }
       const comment = await this.productRepository.create({
         ...body,
-        username: user.username,
+        username: user.firstName+ ''+user.lastName,
         address: body.address
         ,description: body.description,
         email: user.email,

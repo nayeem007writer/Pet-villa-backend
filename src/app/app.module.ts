@@ -59,6 +59,7 @@ export class AppModule implements NestModule {
         { path: `/${ENV.api.API_PREFIX}/web/auth/verify-otp`, method: RequestMethod.POST },
         { path: "/users/send-sms-test", method: RequestMethod.POST },
         { path: `/${ENV.api.API_PREFIX}/users/referred-by-me`, method: RequestMethod.GET },
+        { path: `/${ENV.api.API_PREFIX}/uploads`, method: RequestMethod.GET },
       ).forRoutes("*");
     // .forRoutes(
     //   { path: `/${ENV.api.API_PREFIX}/web/wishlists`, method: RequestMethod.POST },

@@ -42,7 +42,7 @@ export class CommentController {
     return this.service.findByIdBase(id);
   }
 
-  @Get(":id/productId")
+  @Get(":id/product-id")
   async findAllByProductId(
     @AuthUser() AuthUser,
     @Param('id') id: string,
