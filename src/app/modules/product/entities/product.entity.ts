@@ -2,6 +2,7 @@ import { BaseEntity } from "@src/app/base";
 import { ENUM_TABLE_NAMES } from "@src/shared";
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { User } from "../../user/entities/user.entity";
+import { Comment } from "./comment";
 
 export enum ProductStatus {
   AVAILABLE = "Available", 
@@ -53,6 +54,8 @@ export class Product extends BaseEntity {
   @ManyToOne((t) => User, (e) => e.products, { onDelete: "NO ACTION" })
   user?: User ;
 
+  @OneToMany((t) => Comment, (e) => e.product, { onDelete: "NO ACTION" })
+  comments?: Comment [];
   constructor() {
     super();
   }

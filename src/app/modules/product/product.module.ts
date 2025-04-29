@@ -8,12 +8,15 @@ import { PanelProductService } from "./services/product.panel.service";
 import { ProductService } from "./services/product.service";
 import { UserModule } from "../user/user.module";
 import { AclModule } from "../acl/acl.module";
+import { CommentService } from "./services/comment.service";
+import { CommentController } from "./controllers/comment.controller";
+import { Comment } from "./entities/comment";
 
-const entities = [Product];
-const services = [ProductService, PanelProductService,];
-const controllers = [ProductController, PanelProductController,];
+const entities = [Product,Comment];
+const services = [ProductService, PanelProductService,CommentService];
+const controllers = [ProductController, PanelProductController,CommentController];
 const webControllers = [];
-const modules = [HelpersModule, UserModule, AclModule];
+const modules = [HelpersModule, UserModule, AclModule,];
 
 @Module({
   imports: [TypeOrmModule.forFeature(entities), ...modules],

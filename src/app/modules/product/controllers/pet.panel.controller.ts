@@ -26,7 +26,7 @@ import { AuthUser } from '@src/app/decorators';
 @ApiBearerAuth()
 @Controller('pets')
 export class PanelProductController {
-  RELATIONS = [];
+  RELATIONS = ['user'];
   constructor(private readonly service: PanelProductService) { }
 
   // user can see only his own products
