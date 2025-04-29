@@ -4,6 +4,7 @@
 - TypeORM
 - PostgreSQL
 - Redis
+
 ## Running Application
 Environment file is available in ```environments``` directory. Change database credentials then run
 
