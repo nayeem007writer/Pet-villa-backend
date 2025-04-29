@@ -40,6 +40,8 @@ export class ProfileController {
     return await this.service.findUser(AuthUser.id);
   }
 
+
+  // by razu
   @Patch()
   async updateProfile(
     @Body() body: UpdateProfileDTO,
