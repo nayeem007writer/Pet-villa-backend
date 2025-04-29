@@ -37,4 +37,17 @@ export class ProfileService extends BaseService<User> {
         }
         return new SuccessResponse  ( "Profile fetched successfully", obj);
     }
+
+
+
+    // by razu
+    async updateProfile(id: any, payload: any): Promise<User | SuccessResponse> { 
+      const user = await this.userService.findByIdBase(id as string);
+      if (!user) {
+        throw new BadRequestException("User not found");
+      }
+      const updatedUser = await this.userService.updateOneBase(id, payload);
+      return new SuccessResponse("Profile updated successfully", updatedUser);
+    }
+    
 }

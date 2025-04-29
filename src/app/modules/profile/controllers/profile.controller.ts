@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -21,6 +22,7 @@ import { ImageFilter, storageImageOptions, storageOptions } from '@src/shared';
 import { AuthUser } from '@src/app/decorators';
 import { ProfileService } from '../services/profile.service';
 import { User } from '../../user/entities/user.entity';
+import { UpdateProfileDTO } from '../dtos/update.dto';
 
 @ApiTags('Profile')
 @ApiBearerAuth()
@@ -37,6 +39,15 @@ export class ProfileController {
   ): Promise<SuccessResponse | User> {
     return await this.service.findUser(AuthUser.id);
   }
+
+  @Patch()
+  async updateProfile(
+    @Body() body: UpdateProfileDTO,
+    @AuthUser() AuthUser,
+  ): Promise<SuccessResponse | User> {
+    return await this.service.updateProfile(AuthUser.id, body);
+
+  }
 
 
 }
