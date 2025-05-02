@@ -37,6 +37,9 @@ export class PanelProductController {
     @AuthUser() AuthUser,
   ): Promise<SuccessResponse | Product[]> {
     const user = this.service.findUser(AuthUser.id);
+    if((await user).isActive === false) {
+      throw new BadRequestException('User is not active');
+    }
     return this.service.findAllBaseById(AuthUser.id,query, { relations: this.RELATIONS });
   }
 

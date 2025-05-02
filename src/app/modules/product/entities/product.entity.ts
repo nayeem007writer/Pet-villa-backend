@@ -56,6 +56,7 @@ export class Product extends BaseEntity {
 
   @OneToMany((t) => Comment, (e) => e.product, { onDelete: "NO ACTION" })
   comments?: Comment [];
+  
   constructor() {
     super();
   }
