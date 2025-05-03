@@ -8,6 +8,7 @@ export enum ProductStatus {
   AVAILABLE = "Available", 
   ADOPTED = "Adopted",
   PENDING = "Pending",
+  APPROVED = "APPROVED",
 }
 
 export enum PetSpecies {
