@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,14 +8,22 @@ import {
   Patch,
   Post,
   Query,
+  Req,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { SuccessResponse } from '@src/app/types';
 import { FilterRoleDTO } from '../../acl/dtos';
 import { Role } from '../../acl/entities/role.entity';
 import { CreateUserDTO, FilterUserDTO, UpdateUserDTO } from '../dtos';
 import { User } from '../entities/user.entity';
 import { UserService } from '../services/user.service';
+import { AvatarDTO } from '../dtos/user/avatar.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { ImageFilter, storageImageOptions } from '@src/shared/common.utils';
+import { ENV } from '@src/env';
+import { AuthUser } from '@src/app/decorators';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -43,7 +52,47 @@ export class UserController {
     return this.service.findByIdBase(id, { relations: this.RELATIONS });
   }
 
-  
+    @Patch('avatar')
+    @ApiConsumes("multipart/form-data")
+    @ApiBody({ type: AvatarDTO })
+    @UseInterceptors(
+      FileFieldsInterceptor(
+        [
+          // { name: "thumbImage", maxCount: 1 },
+          { name: "productImages", maxCount: 1 },
+          // { name: "productVideo", maxCount: 1 },
+        ],
+        {
+          storage: storageImageOptions,
+          fileFilter: ImageFilter,
+          limits: { fileSize: ENV.files.IMAGE_MAX_SIZE },
+        })
+    )
+    uploadAvatar(    
+        @UploadedFiles() files,
+        @Body() data: AvatarDTO,
+        @Req() request,
+        @AuthUser() authUser,):Promise<SuccessResponse | User> {
+
+              if (request.fileValidationError) {
+                throw new BadRequestException(request.fileValidationError);
+              }
+              return this.service.createProductsWithImageWithSpecialProduct(
+                data, files, authUser);
+    }
+
+
+    @Patch(':id/activate')
+    async activeUser(
+      @Param('id') id: string,
+    ): Promise<SuccessResponse | User> {
+      const body = {
+        isActive: true,
+      };
+      return this.service.updateOneBase(id, body,);
+
+    }
+
 
   @Post()
   async createOne(@Body() body: CreateUserDTO): Promise<User> {

@@ -22,6 +22,9 @@ import {
 import { User } from '../entities/user.entity';
 import { UserRole } from './../entities/userRole.entity';
 import { UserRoleService } from './userRole.service';
+import { IAuthUser } from '@src/app/interfaces';
+import { AvatarDTO } from '../dtos/user/avatar.dto';
+import { SuccessResponse } from '@src/app/types';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -61,6 +64,45 @@ export class UserService extends BaseService<User> {
     return roles;
   }
 
+   async createProductsWithImageWithSpecialProduct(
+    body:AvatarDTO,
+      files: any,
+      authUser: IAuthUser
+    ):Promise<SuccessResponse | User> {
+      console.log(authUser)
+      // await this.checkUserRole(authUser, ENUM_ACL_DEFAULT_ROLES.SUPER_ADMIN);
+      const docPayload: any[] = [];
+      // console.log(data)
+  
+  //  console.log(files.productImages[0].path)
+    let nameImage = files.productImages[0].filename;
+    console.log(nameImage)
+
+      if (files?.productImages) {
+        const jobImageObj = {
+          title: 'image',
+          type: files.productImages[0].mimetype,
+          url: `http://[::1]:3000/api/v1/uploads/${nameImage}`,
+        };
+        docPayload.push(jobImageObj);
+      }
+  
+  
+      const user = await this.userRepository.findOne({
+          where: { id: authUser.id as string }
+        })
+        console.log(user)
+      
+  
+      const newProductObj = {
+        avatar: docPayload.find(doc => doc.title === 'image')?.url || null,
+      }
+      console.log(newProductObj)
+      
+  
+      const  updatedUser = await this.userRepository.update(authUser.id, newProductObj);
+      return new SuccessResponse('Product created successfully', updatedUser);
+    }
 
   async createUser(payload: CreateUserDTO, relations: string[]): Promise<User> {
     const { roles, ...userData } = payload;
@@ -225,6 +267,7 @@ export class UserService extends BaseService<User> {
         email: payload.email,
         password: payload.password,
         phoneNumber: payload?.phoneNumber,
+        isActive: false
       });
 
       const userRole = await this.userRoleService.createOneBase({

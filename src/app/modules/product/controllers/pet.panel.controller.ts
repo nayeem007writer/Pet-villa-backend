@@ -45,9 +45,27 @@ export class PanelProductController {
 
   @Get('customer')
   async findAllForCustomer(
-    @Query() query: FilterProductDTO,):Promise<SuccessResponse | Product[]>  {
+    @Query() query: FilterProductDTO,
+    @AuthUser() authUser,
+  ):Promise<SuccessResponse | Product[]>  {
+      const user = this.service.findUser(authUser.id);
+      if((await user).isActive === false) {
+        throw new BadRequestException('User is not active');
+      }
     return this.service.findAllBase(query, { relations: this.RELATIONS });
     }
+
+    @Get('admin')
+    async findAllForAdmin(
+      @Query() query: FilterProductDTO,
+      @AuthUser() authUser,
+    ):Promise<SuccessResponse | Product[]>  {
+        const user = this.service.findUser(authUser.id);
+        if((await user).isActive === false) {
+          throw new BadRequestException('User is not active');
+        }
+      return this.service.findAllBase(query, { relations: this.RELATIONS });
+      }    
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Product> {
     return this.service.findByIdBase(id, { relations: this.RELATIONS });
@@ -75,8 +93,10 @@ export class PanelProductController {
     @Req() request,
     @AuthUser() authUser,
   ): Promise<any> {
-
-    console.log(data)
+    const user = this.service.findUser(authUser.id);
+    if((await user).isActive === false) {
+      throw new BadRequestException('User is not active');
+    }
 
     if (request.fileValidationError) {
       throw new BadRequestException(request.fileValidationError);
