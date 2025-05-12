@@ -1,7 +1,7 @@
 import { BaseEntity } from '@src/app/base';
 import { ENUM_COLUMN_TYPES, ENUM_TABLE_NAMES } from '@src/shared';
 import { Type } from 'class-transformer';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { Role } from '../../acl/entities/role.entity';
 import { UserRole } from './userRole.entity';
 import { Product } from '../../product/entities/product.entity';
@@ -52,9 +52,10 @@ export class User extends BaseEntity {
 
   @OneToMany((t) => UserRole, (e) => e.user)
   @Type((t) => UserRole)
-  userRoles?: UserRole[];
+  userRoles?: UserRole[]; 
 
-  @OneToMany((t) => Product, (e) => e.user)
+
+  @OneToMany((t) => Product, (e) => e.user,{ cascade: true, onDelete: 'CASCADE' })
   products?: Product[];
 
   roles?: Role[] = [];

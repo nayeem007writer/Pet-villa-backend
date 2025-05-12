@@ -27,8 +27,8 @@ export class Comment extends BaseEntity {
   @Column({  nullable: true ,type: ENUM_COLUMN_TYPES.VARCHAR})
   description?: string;
 
-  @ManyToOne((t) => Product, product => product.comments)
-  product: Product;
+  @ManyToOne((t) => Product, product => product.comments, { onDelete: "CASCADE" })
+  product?: Product;
 
 
 

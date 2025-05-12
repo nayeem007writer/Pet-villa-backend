@@ -25,7 +25,7 @@ export enum PetGender {
 
 @Entity(ENUM_TABLE_NAMES.PETS)
 export class Product extends BaseEntity {
-  public static readonly SEARCH_TERMS: string[] = ["name", ];
+  public static readonly SEARCH_TERMS: string[] = ["name","age","species", "user" ];
 
   @Column({ nullable: false })
   name?: string;
@@ -52,10 +52,10 @@ export class Product extends BaseEntity {
   @Column({type: "enum", enum: ProductStatus, default: ProductStatus.PENDING})
   status?: ProductStatus;
 
-  @ManyToOne((t) => User, (e) => e.products, { onDelete: "NO ACTION" })
+  @ManyToOne((t) => User, (e) => e.products, { onDelete: "CASCADE" })
   user?: User ;
 
-  @OneToMany((t) => Comment, (e) => e.product, { onDelete: "NO ACTION" })
+  @OneToMany((t) => Comment, (e) => e.product, { cascade: true, onDelete: 'CASCADE' })
   comments?: Comment [];
   
   constructor() {

@@ -23,6 +23,7 @@ import { AuthUser } from '@src/app/decorators';
 import { ProfileService } from '../services/profile.service';
 import { User } from '../../user/entities/user.entity';
 import { UpdateProfileDTO } from '../dtos/update.dto';
+import { IAuthUser } from '@src/app/interfaces';
 
 @ApiTags('Profile')
 @ApiBearerAuth()
@@ -35,9 +36,11 @@ export class ProfileController {
   // admin can see all products
   @Get()
   async findone(
-    @AuthUser() AuthUser,
+    @AuthUser() AuthUser: IAuthUser,
   ): Promise<SuccessResponse | User> {
-    return await this.service.findUser(AuthUser.id);
+    const user = await this.service.findUser(AuthUser);
+    console.log(user);
+    return user;
   }
 
 

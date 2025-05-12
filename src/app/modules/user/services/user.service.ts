@@ -34,7 +34,7 @@ export class UserService extends BaseService<User> {
     private readonly userRoleService: UserRoleService,
     private readonly roleService: RoleService,
     private readonly bcrypt: BcryptHelper,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
   ) {
     super(userRepository);
   }
@@ -99,9 +99,12 @@ export class UserService extends BaseService<User> {
       }
       console.log(newProductObj)
       
-  
-      const  updatedUser = await this.userRepository.update(authUser.id, newProductObj);
-      return new SuccessResponse('Product created successfully', updatedUser);
+      let avatar = newProductObj.avatar
+      user.avatar = avatar;
+      const updatedUser = await this.userRepository.save(user);
+       console.log(updatedUser)
+      //  let avatar = newProductObj.avatar
+      return new SuccessResponse('Product created successfully', avatar);
     }
 
   async createUser(payload: CreateUserDTO, relations: string[]): Promise<User> {

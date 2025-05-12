@@ -84,6 +84,7 @@ async findUser(
       user,
       age: 
       data.age,
+      status: data.status,
       productImages: docPayload.find(doc => doc.title === 'image')?.url || null,
     }
     

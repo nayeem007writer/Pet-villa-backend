@@ -26,7 +26,10 @@ export class ProfileService extends BaseService<User> {
     super(productRepository);
   }
     async findUser(authUser: IAuthUser): Promise<User | SuccessResponse> {
-      const user = await this.userService.findByIdBase(authUser.id as string);
+      const user = await this.productRepository.findOne({
+        where: { id: authUser.id },
+        relations: ["userRoles", "userRoles.role"],
+      });
         const obj = {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -34,6 +37,7 @@ export class ProfileService extends BaseService<User> {
             phoneNumber: user.phoneNumber,
             avatar: user.avatar,
             username: user.firstName +" " +user.lastName,
+            isActive : user.isActive,
         }
         return new SuccessResponse  ( "Profile fetched successfully", obj);
     }

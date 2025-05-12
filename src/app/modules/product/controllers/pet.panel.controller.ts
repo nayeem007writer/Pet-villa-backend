@@ -88,7 +88,7 @@ export class PanelProductController {
       if((await user).isActive === false) {
         throw new BadRequestException('User is not active');
       }
-    return await this.service.findAllBase(query, { relations: this.RELATIONS });
+    return await this.service.findAllBaseLol(query, { relations: this.RELATIONS },(await user).id);
     }
 
     @Get('admin')

@@ -24,6 +24,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ImageFilter, storageImageOptions } from '@src/shared/common.utils';
 import { ENV } from '@src/env';
 import { AuthUser } from '@src/app/decorators';
+import { ENUM_ACL_DEFAULT_ROLES } from '@src/shared';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -114,6 +115,11 @@ export class UserController {
 
   @Delete(':id')
   async deleteOne(@Param('id') id: string): Promise<SuccessResponse> {
+    const user = await this.service.findByIdBase(id);
+    let  isSuperAdmin = user.roles.map((role) => role.title).includes(ENUM_ACL_DEFAULT_ROLES.SUPER_ADMIN);
+    if (isSuperAdmin) {
+      throw new BadRequestException('You cannot delete super-admin');
+    }
     return this.service.deleteOneBase(id);
   }
 
